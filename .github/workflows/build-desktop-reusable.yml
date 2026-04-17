@@ -32,7 +32,7 @@ jobs:
       matrix:
         config:
           [
-            { name: "Linux", os: "ledger-live-linux-8CPU-32RAM", image: "linux-x86_64.AppImage", output-name: "linux" },
+            { name: "Linux", os: "ubuntu-latest", image: "linux-x86_64.AppImage", output-name: "linux" },
           ]
     name: "${{ matrix.config.name }} Build"
     runs-on: ${{ matrix.config.os }}
