@@ -33,16 +33,12 @@ jobs:
         config:
           [
             { name: "Linux", os: "ledger-live-linux-8CPU-32RAM", image: "linux-x86_64.AppImage", output-name: "linux" },
-            { name: "Windows", os: "windows-2022", dotnet: true, image: "win-x64.exe", output-name: "win" },
-            { name: "macOS", os: "macos-14", image: "mac.dmg", output-name: "mac" },
           ]
     name: "${{ matrix.config.name }} Build"
     runs-on: ${{ matrix.config.os }}
     timeout-minutes: 20
     outputs:
       linux: ${{ steps.status.outputs.Linux }}
-      win: ${{ steps.status.outputs.Windows }}
-      mac: ${{ steps.status.outputs.macOS }}
 
     env:
       NODE_OPTIONS: "--max-old-space-size=7168"
@@ -126,16 +122,6 @@ jobs:
         with:
           name: linux-js-bundle-metafiles
           path: linux-js-bundle-metafiles
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        if: ${{ needs.build-desktop-app.outputs.win == 'success' }}
-        with:
-          name: win-js-bundle-metafiles
-          path: win-js-bundle-metafiles
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        if: ${{ needs.build-desktop-app.outputs.mac == 'success' }}
-        with:
-          name: mac-js-bundle-metafiles
-          path: mac-js-bundle-metafiles
 
       - uses: actions/github-script@v7
         name: Produce statuses of builds
@@ -145,8 +131,6 @@ jobs:
           script: |
             const obj = {
               linux: "${{ needs.build-desktop-app.outputs.linux }}",
-              win: "${{ needs.build-desktop-app.outputs.win }}",
-              mac: "${{ needs.build-desktop-app.outputs.mac }}"
             }
             return JSON.stringify(obj);
 
